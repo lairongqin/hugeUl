@@ -39,7 +39,7 @@
             arr.push({
                 checked : true,
                 name : '方杰' + i,
-                tel : '15914347937',
+                tel : 'T15914347937',
                 mail : 'fangjie@qq.com'
             })
         }
@@ -47,7 +47,8 @@
             data:arr,
             targetId: 'container',
             itemHeight: 40,
-            tplString: '<li><span><input type="checkbox" class="checked"></span><span class="name"></span><span class="tel"></span><span class="mail"></span></li>'
+            tplString: '<li><span><input type="checkbox" class="checked"></span><span class="name"></span><span class="tel"></span><span class="mail"></span></li>',
+            inputClassName: 'checked',
         }
         var hugeUl = new hugeUlList;
         hugeUl.init(option);
