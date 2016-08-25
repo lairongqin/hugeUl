@@ -1,11 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #container {
+            height: 300px;
+            width: 450px;
+            border: 1px solid black;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -150px 0 0 -225px;
+            overflow-y:scroll;
+        }
+        
+        #container li {
+            height: 40px;
+            list-style: none;
+            box-sizing: border-box;
+            border: 1px solid black;
+        }
+    </style>
 </head>
+
 <body>
     <div id="container"></div>
     <script src="../hugeUl.js"></script>
+    <script>
+        var arr = [];
+        for (var i = 0;i<100;i++) {
+            arr.push({
+                checked : true,
+                name : '方杰' + i,
+                tel : '15914347937',
+                mail : 'fangjie@qq.com'
+            })
+        }
+        var option = {
+            data:arr,
+            targetId: 'container',
+            itemHeight: 40,
+            tplString: '<li><span><input type="text" class="checked"></span><span class="name"></span><span class="tel"></span><span class="mail"></span></li>'
+        }
+        var hugeUl = new hugeUlList;
+        hugeUl.init(option);
+    </script>
 </body>
+
 </html>
