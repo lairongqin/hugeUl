@@ -2,7 +2,7 @@ var option = {
     data: {},
     targetId: '',
     itemHeight: 0,
-    showKey: []
+    tplString: '',
 }
 
 function hugeulList() {
@@ -13,8 +13,23 @@ function hugeulList() {
             this.insertDOM();
         },
         insertDOM: function () {
+
+            // 获得容器
             var container = document.getElementById(this.setting.targetId);
-            var height = targetId.clientHeight || 400;
+
+            // 获得容器高度
+            var height = container.clientHeight;
+
+            // 获得所需要插入DOM的个数
+            var len = Math.floor(height / setting.itemHeight) + 2;
+            var fragment = document.createDocumentFragment();
+
+            // 生成要插入的字符串
+            var str = setting.tplString;
+            for (var i = 0; i < len; i++) {
+                str += str;
+            }
+            str = '<ul>' + str + '</ul>';
             
         }
 
