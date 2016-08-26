@@ -36,6 +36,7 @@ function hugeUlList() {
             elArr: [],
         },
         pointer: -1,
+        direction: 0,
         init: function (option) {
 
             // 浅层拷贝
@@ -145,7 +146,7 @@ function hugeUlList() {
             ulArr.forEach(function (node) {
                 var temp = {};
                 that.pointer++;
-                node.style.cssText = 'position:absolute;top:'+ that.pointer *that.setting.itemHeight + 'px';
+                node.style.cssText = 'position:absolute;top:' + that.pointer * that.setting.itemHeight + 'px';
                 that.setting.keys.forEach(function (prop) {
                     temp[prop] = node.querySelector('.' + prop);
                     temp[prop].innerText = that.setting.data[that.pointer][prop];
@@ -154,7 +155,7 @@ function hugeUlList() {
                 temp[that.setting.inputClassName] = node.querySelector('.' + that.setting.inputClassName);
                 that.setting.elArr.push(temp);
             })
-            console.log(this.setting.elArr)
+
             this.nowScroll();
         },
         nowScroll: function () {
@@ -165,15 +166,16 @@ function hugeUlList() {
                 that.doScroll(this, direction);
             };
         },
-        doScroll: function (scroll, direction) {
+        doScroll: function (scroll) {
             var top = scroll.scrollTop;
             var shift = this.setting.elArr.length - 1;
             var queue = this.setting.elArr;
-
+            var index = this.pointer - shift;
+            var direction = this.direction
+            console.log(top - direction)
             if (top - direction > 0) {
 
-                var index = this.pointer - shift;
-                while (top > (index * this.setting.itemHeight + 10) && this.pointer + 1 < this.setting.data.length) {
+                while (top > (index * this.setting.itemHeight + this.setting.itemHeight * 0.5) && this.pointer + 1 < this.setting.data.length) {
 
                     var elObj = queue.shift();
                     this.pointer++;
@@ -183,15 +185,27 @@ function hugeUlList() {
                     queue.push(elObj);
                     index = this.pointer - shift;
                 }
+            } else if (top - direction < 0) {
+
+                while (top < (index * this.setting.itemHeight - this.setting.itemHeight * 0.5) && this.pointer >= 1) {
+                    var elObj = queue.pop();
+                    this.pointer--;
+
+                    this.moveChild(elObj, this.pointer, shift);
+                    queue.unshift(elObj);
+                    index = this.pointer - shift;
+                }
             }
+
+            this.direction = top;
         },
         moveChild(elObj, index, shift) {
             var el = elObj._el;
             var that = this;
-            this.setting.keys.forEach(function(value){
+            this.setting.keys.forEach(function (value) {
                 elObj[value].innerText = that.setting.data[index - shift][value];
             })
-            el.style.top = (index - shift)*this.setting.itemHeight + 'px';
+            el.style.top = (index - shift) * this.setting.itemHeight + 'px';
         }
 
     }
