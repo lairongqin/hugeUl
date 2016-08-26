@@ -1,28 +1,45 @@
 // option示例
 // var option = {
-//     data: [],
-//     targetId: '',
-//     itemHeight: 0,
-//     tplString: '',
-//     inputClassName: '',
+//     data: [], 数组，存放数据，里面是数据对象
+//     targetId: '', 列表容器，需要对其设置宽和高
+//     itemHeight: 0, 列表项高度，定高
+//     tplString: '', 列表项模板字符串，data中对象的属性值需与模板中需要相应填充内容(字符串)的元素一致。
+//     inputClassName: '', input元素的className 如果不需要input标签，可以不设置。
 // }
+// 
+// data是数组对象
+// inputClassName 用来控制checkbox，data中与之名字相同的属性负责对input状态进行标记
+// such as: 
+
+// var dataArr = [{
+//                 checked : true,
+//                 name : '方杰1',
+//                 tel : 'T15914347937',
+//                 mail : 'fangjie@qq.com'
+//             },
+//             {
+//                 checked : true,
+//                 name : '方杰2',
+//                 tel : 'T15914347937',
+//                 mail : 'fangjie@qq.com'
+//             }];
 // var option = {
-//     data: arr,
+//     data: dataArr,
 //     targetId: 'container',
 //     itemHeight: 40,
 //     tplString: '<li><span><input type="checkbox" class="checked"></span><span class="name"></span><span class="tel"></span><span class="mail"></span></li>'
 //     inputClassName: 'checked';
 // }
-// inputClassName 用来控制input元素，data中与之名字相同的属性负责对input进行控制
-var setting = {
-    data: [],
-    targetId: '',
-    itemHeight: 0,
-    tplString: '',
-    inputClassName: '',
-    keys: [],
-    elArr: [],
-}
+
+// var setting = {
+//     data: [],
+//     targetId: '',
+//     itemHeight: 0,
+//     tplString: '',
+//     inputClassName: '',
+//     keys: [],
+//     elArr: [],
+// }
 
 function hugeUlList() {
     var hugeUl = {
@@ -104,9 +121,7 @@ function hugeUlList() {
             // 原生插入列表项
 
             var data = this.setting.data;
-            var len = data.length;
             var fragment = document.createDocumentFragment();
-            var inputName = this.setting.inputClassName;
             var keys = this.setting.keys;
 
             // 把tpl转换成DOM
@@ -172,7 +187,7 @@ function hugeUlList() {
             var queue = this.setting.elArr;
             var index = this.pointer - shift;
             var direction = this.direction
-            console.log(top - direction)
+
             if (top - direction > 0) {
 
                 while (top > (index * this.setting.itemHeight + this.setting.itemHeight * 0.5) && this.pointer + 1 < this.setting.data.length) {
@@ -187,7 +202,7 @@ function hugeUlList() {
                 }
             } else if (top - direction < 0) {
 
-                while (top < (index * this.setting.itemHeight - this.setting.itemHeight * 0.5) && this.pointer >= 1) {
+                while (top < (index * this.setting.itemHeight) && this.pointer >= 1) {
                     var elObj = queue.pop();
                     this.pointer--;
 
@@ -199,13 +214,29 @@ function hugeUlList() {
 
             this.direction = top;
         },
-        moveChild(elObj, index, shift) {
+        moveChild: function (elObj, index, shift) {
             var el = elObj._el;
             var that = this;
             this.setting.keys.forEach(function (value) {
                 elObj[value].innerText = that.setting.data[index - shift][value];
             })
             el.style.top = (index - shift) * this.setting.itemHeight + 'px';
+        },
+        addEvent: function (el, type, callback) {
+            var that = this;
+            if (el.addEventListener) {
+                el.addEventListener(type, function(event) {
+                    return callback.call(this,event,that.setting.data);
+                }, false);
+            } else if (el.attachEvent) {
+                el.attachEvent('on' + tyep, function(event){
+                    return callback.call(this,event,that.setting.data);
+                })
+            } else {
+                el['on' + type] = function(event){
+                    return callback.call(this,event,that.setting.data);
+                }
+            }
         }
 
     }

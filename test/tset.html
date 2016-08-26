@@ -26,6 +26,10 @@
             list-style: none;
             box-sizing: border-box;
             border: 1px solid black;
+            width : 100%;
+        }
+        span {
+            margin:0 16px;
         }
     </style>
 </head>
@@ -51,7 +55,11 @@
             inputClassName: 'checked',
         }
         var hugeUl = new hugeUlList;
+        var container = document.getElementById('container');
         hugeUl.init(option);
+        hugeUl.addEvent(container,'click',function(event,data){
+            
+        })
     </script>
 </body>
 
