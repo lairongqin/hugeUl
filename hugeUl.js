@@ -187,22 +187,36 @@ function hugeUlList() {
             var queue = this.setting.elArr;
             var index = this.pointer - shift;
             var direction = this.direction
+            if (top > 0) {
 
-            if (top - direction > 0) {
+                if (top - direction > 0) {
 
-                while (top > (index * this.setting.itemHeight + this.setting.itemHeight * 0.5) && this.pointer + 1 < this.setting.data.length) {
+                    while (top > (index * this.setting.itemHeight + this.setting.itemHeight * 0.5) && this.pointer + 1 < this.setting.data.length) {
 
-                    var elObj = queue.shift();
-                    this.pointer++;
+                        var elObj = queue.shift();
+                        this.pointer++;
 
-                    this.moveChild(elObj, this.pointer, 0);
+                        this.moveChild(elObj, this.pointer, 0);
 
-                    queue.push(elObj);
-                    index = this.pointer - shift;
+                        queue.push(elObj);
+                        index = this.pointer - shift;
+                    }
+                } else if (top - direction < 0) {
+
+                    while (top < (index * this.setting.itemHeight) && this.pointer >= 1) {
+                        var elObj = queue.pop();
+                        this.pointer--;
+
+                        this.moveChild(elObj, this.pointer, shift);
+                        queue.unshift(elObj);
+                        index = this.pointer - shift;
+                    }
                 }
-            } else if (top - direction < 0) {
 
-                while (top < (index * this.setting.itemHeight) && this.pointer >= 1) {
+            } else {
+
+                // 这里用来避免某些版本的safari存在弹性滚动导致top变为负值的坑
+                while (index != 0) {
                     var elObj = queue.pop();
                     this.pointer--;
 
@@ -225,16 +239,16 @@ function hugeUlList() {
         addEvent: function (el, type, callback) {
             var that = this;
             if (el.addEventListener) {
-                el.addEventListener(type, function(event) {
-                    return callback.call(this,event,that.setting.data);
+                el.addEventListener(type, function (event) {
+                    return callback.call(this, event, that.setting.data);
                 }, false);
             } else if (el.attachEvent) {
-                el.attachEvent('on' + tyep, function(event){
-                    return callback.call(this,event,that.setting.data);
+                el.attachEvent('on' + tyep, function (event) {
+                    return callback.call(this, event, that.setting.data);
                 })
             } else {
-                el['on' + type] = function(event){
-                    return callback.call(this,event,that.setting.data);
+                el['on' + type] = function (event) {
+                    return callback.call(this, event, that.setting.data);
                 }
             }
         }
